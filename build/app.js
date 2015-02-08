@@ -253,10 +253,16 @@ var UXHand = new function(options) {
 	
 		var dataObj = e.originalEvent;
 	
+		if (!dataObj) {
+			dataObj = e;
+		}
+	
 		this.DOM.textField.prepend(e.type+": "+dataObj.changedTouches[0].clientX+"<br />");
 		
 	
 		this.touch.start = dataObj;
+	
+		console.log("TOUCH START", e);
 	
 	};
 
@@ -264,7 +270,15 @@ var UXHand = new function(options) {
 	
 		var dataObj = e.originalEvent;
 	
-		this.touch.end = dataObj;
+		if (!dataObj) {
+			console.log("!dataObj");
+			dataObj = e;
+		}
+	
+		_this.touch.end = dataObj.changedTouches;
+	
+	
+		console.log("TOUCHEND", _this.touch.end);
 	
 	
 		if (this.touch.start) {
@@ -335,16 +349,22 @@ var UXHand = new function(options) {
 				{
 	
 	
-					y: touch.end.changedTouches[0].clientY,
+					y: touch.end.clientY,
 	
 	
-					x: touch.end.changedTouches[0].clientX
+					x: touch.end.clientX
 	
 	
 				}
 	
 	
 			];
+	
+	
+		
+	
+	
+			console.log("vectors", touch.end);
 	
 	
 		
@@ -485,6 +505,10 @@ var UXHand = new function(options) {
 		
 	
 	
+		};
+	
+		this.tap = function() {
+			return;
 		};
 	
 	

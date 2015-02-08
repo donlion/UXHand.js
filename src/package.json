@@ -16,7 +16,7 @@
       "gulp-cache": "^0.2.0",
       "gulp-include": "^1.0.1",
       "merge-stream": "^0.1.5",
-      "gulp-jsbeautifier": "~2.2.20",
+      "gulp-jsbeautifier": "latest",
       "gulp": "~3.8.10"
   }
 }

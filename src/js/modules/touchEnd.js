@@ -2,7 +2,15 @@ this.touchEnd = function(e) {
 
 	var dataObj = e.originalEvent;
 
-	this.touch.end = dataObj;
+	if (!dataObj) {
+		console.log("!dataObj");
+		dataObj = e;
+	}
+
+	_this.touch.end = dataObj.changedTouches;
+
+
+	console.log("TOUCHEND", _this.touch.end);
 
 
 	if (this.touch.start) {

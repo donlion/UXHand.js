@@ -8,10 +8,12 @@ this.drag = function() {
 			x: touch.start.touches[0].clientX
 		},
 		{
-			y: touch.end.changedTouches[0].clientY,
-			x: touch.end.changedTouches[0].clientX
+			y: touch.end.clientY,
+			x: touch.end.clientX
 		}
 	];
+
+	console.log("vectors", touch.end);
 
 	var directionY = function() {
 		if (vectors[0].y > vectors[1].y) { //greater than, because the browser calculates from top left

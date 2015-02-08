@@ -33,4 +33,6 @@ this.processor = new function() {
 
 	//= include processes/drag.js
 
+	//= include processes/tap.js
+
 };
