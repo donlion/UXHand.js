@@ -1,16 +1,28 @@
 {
-  "name": "Cabana Boilerplate",
-  "version": "0.0.0",
-  "dependencies": {
-    "jquery": "~1.11",
-    "jquery-ui": "~1.11.2",
-    "regression-js": "~1.3.0"
-  },
-  "resolutions": {
-    "jquery": "~1.11",
-    "jquery-ui": "~1.11.2"
-  },
-  "devDependencies": {
-    "q": "1.0.1"
-  }
+  "name": "uxhand.js",
+  "version": "0.2.2",
+  "authors": [
+    "Leo Ørsnes <zeekooster@gmail.com>"
+  ],
+  "description": "Detect whether your user is left- or right-handed and let your design react to the result.",
+  "main": "build/uxhand.js",
+  "keywords": [
+    "ux",
+    "javascript",
+    "js",
+    "left",
+    "hand",
+    "right",
+    "hand",
+    "left",
+    "right",
+    "hands",
+    "hand",
+    "uxhand",
+    "uxhand.js",
+    "leo",
+    "orsnes"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/donlion/UXHand.js"
 }

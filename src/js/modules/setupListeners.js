@@ -1,14 +1,17 @@
-this._setupListeners = function(root) {
+this._setupListeners = function() {
 
-	document.body.addEventListener('touchstart', function(e) {
+	var rootElement = document.body;
+	//rootElement = document.querySelector("iframe").contentDocument.body;
+
+	rootElement.addEventListener('touchstart', function(e) {
 		UXHand._events.touchstart(e);
 	});
 
-	document.body.addEventListener('touchend', function(e) {
+	rootElement.addEventListener('touchend', function(e) {
 		UXHand._events.touchend(e);
 	});
 
-	document.body.addEventListener('touchmove', function(e) {
+	rootElement.addEventListener('touchmove', function(e) {
 		UXHand._events.touchmove(e);
 	});
 

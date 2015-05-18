@@ -1,12 +1,16 @@
 this.cycle = function() {
 	console.info("cycle");
 
-	this._calc();
+	try {
+		this._calc();
+	} catch(e) {
+		console.log("No touches to calculate");
+	} finally {
+		var _data = this._data;
 
-	var _data = this._data;
+		this._domClasses(_data);
 
-	this._domClasses(_data);
-
-	this._synchronize();
+		this._synchronize();
+	}
 
 };

@@ -8,7 +8,8 @@ this.options = function() {
 		cycleDelay: 20000,
 		destroyClasses: true,
 		destroyData: true,
-		root: document.body
+		root: document.body,
+		threshold: 50
 	};
 
 

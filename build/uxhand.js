@@ -1974,7 +1974,8 @@ var UXHand = new function() {
 			cycleDelay: 20000,
 			destroyClasses: true,
 			destroyData: true,
-			root: document.body
+			root: document.body,
+			threshold: 50
 		};
 	
 	
@@ -1996,27 +1997,34 @@ var UXHand = new function() {
 	this.cycle = function() {
 		console.info("cycle");
 	
-		this._calc();
+		try {
+			this._calc();
+		} catch(e) {
+			console.log("No touches to calculate");
+		} finally {
+			var _data = this._data;
 	
-		var _data = this._data;
+			this._domClasses(_data);
 	
-		this._domClasses(_data);
-	
-		this._synchronize();
+			this._synchronize();
+		}
 	
 	};
 
-	this._setupListeners = function(root) {
+	this._setupListeners = function() {
 	
-		document.body.addEventListener('touchstart', function(e) {
+		var rootElement = document.body;
+		//rootElement = document.querySelector("iframe").contentDocument.body;
+	
+		rootElement.addEventListener('touchstart', function(e) {
 			UXHand._events.touchstart(e);
 		});
 	
-		document.body.addEventListener('touchend', function(e) {
+		rootElement.addEventListener('touchend', function(e) {
 			UXHand._events.touchend(e);
 		});
 	
-		document.body.addEventListener('touchmove', function(e) {
+		rootElement.addEventListener('touchmove', function(e) {
 			UXHand._events.touchmove(e);
 		});
 	
@@ -2260,10 +2268,17 @@ var UXHand = new function() {
 		};
 	
 	
+		var count = _data.scores.left+_data.scores.right+_data.scores.both;
 	
-		if (!_data) {
+		if (document.getElementById('textfield')) {
+			document.getElementById('textfield').innerHTML = count;
+		}
+	
+		if (!_data || count < this.options().threshold) {
 			return;
 		}
+	
+		console.log("COUNT", count, this.options().threshold);
 	
 		console.log(_data.scores.left, _data.scores.right*(1+this.options().certainty));
 	

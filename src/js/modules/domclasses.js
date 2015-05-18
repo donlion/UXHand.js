@@ -32,10 +32,17 @@ this._domClasses = function(_data) {
 	};
 
 
+	var count = _data.scores.left+_data.scores.right+_data.scores.both;
 
-	if (!_data) {
+	if (document.getElementById('textfield')) {
+		document.getElementById('textfield').innerHTML = count;
+	}
+
+	if (!_data || count < this.options().threshold) {
 		return;
 	}
+
+	console.log("COUNT", count, this.options().threshold);
 
 	console.log(_data.scores.left, _data.scores.right*(1+this.options().certainty));
 
