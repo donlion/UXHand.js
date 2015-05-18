@@ -516,7 +516,7 @@ var UXHand = new function() {
 	};
 
 
-	this.version = '0.2.2';
+	this.version = '0.2.3';
 
 	this.init = function() {
 		console.log("init");
