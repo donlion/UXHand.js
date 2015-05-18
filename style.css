@@ -80,3 +80,13 @@ button span:before {
 button span:after {
 	top : 6px;
 }
+
+h2 {
+	position: fixed;
+  background-color: rgba(255,255,255,0.9);
+  width: 100%;
+  z-index: 2000;
+  top: 0;
+  margin: 0;
+  line-height: 3;
+}
