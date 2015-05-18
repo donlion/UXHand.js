@@ -1,20 +1,32 @@
 this.wireFrame = new function() {
 
-	this.setup = function() {
-		console.log("wireframe setup");
+	this.areas = function() {
+		var gap = UXHand.options().certainty,
+				x = screen.width*gap,
+				w = (screen.width/2)-(x/2);
 
+		return {
+			gap: gap,
+			x: x,
+			w: w
+		};
 	};
 
 	this.errorGap = function() {
 
+		var area = this.areas();
+
 		return {
-			x: [$(window).width() * 0.425, $(window).width() * 0.575]
+			x: [0, area.w+area.x]
 		};
 
 	};
 
 	this.render = function() {
-		console.log(this);
+		console.log(this.errorGap());
+
+		var area = this.areas();
+
 		var rendering = [
 			"<div ",
 			"style='",
@@ -22,10 +34,10 @@ this.wireFrame = new function() {
 			"top:0;",
 			"bottom:0;",
 			"left:",
-			this.errorGap().x[0],
+			area.w,
 			"px;",
 			"width:",
-			this.errorGap().x[1]-this.errorGap().x[0],
+			area.x,
 			"px;",
 			"background-color:rgba(0,0,0,0.2);",
 			"display:inline-block;",
@@ -42,12 +54,12 @@ this.wireFrame = new function() {
 			"bottom:0;",
 			"left:0;",
 			"width:",
-			$(window).width() * 0.425,
+			area.w,
 			"px;",
 			"height:",
-			$(window).height() * 0.575,
+			(screen.height*0.575),
 			"px;",
-			"background-color:rgba(255,0,0,0.1);",
+			"background-color:#3F51B5;opacity:1;",
 			"' />"
 			]; //LeftHandArea
 		$("body").prepend(rendering.join(""));
@@ -58,30 +70,17 @@ this.wireFrame = new function() {
 			"bottom:0;",
 			"right:0;",
 			"width:",
-			$(window).width() * 0.425,
+			area.w,
 			"px;",
 			"height:",
-			$(window).height() * 0.575,
+			(screen.height*0.575),
 			"px;",
-			"background-color:rgba(255,0,0,0.1);",
+			"background-color:#3F51B5;opacity:1;",
 			"' />"
 			]; //LeftHandArea
 		$("body").prepend(rendering.join(""));
 	};
 
 
-
-
-	this.areas = {
-
-		left: function() {
-			
-		},
-
-		right: function() {
-
-		}
-
-	};
 
 };
