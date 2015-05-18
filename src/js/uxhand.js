@@ -42,8 +42,6 @@ var UXHand = new function() {
 			UXHand.cycle();
 		});
 
-		this.wireFrame.render();
-
 
 	};
 
