@@ -21,6 +21,15 @@ gulp.task("build", ["clean"], function () {
     var _merge = new merge();
     _merge.add(gulp.src(srcDir)
         .pipe(include())
+        .pipe(uglify({
+          compress: {
+            pure_funcs: ["console.log", "console.info", "console.error"],
+            dead_code: false,
+            unused: false,
+            join_vars: false
+          },
+          mangle: false
+        }))
         .pipe(gulp.dest(buildDir)));
     return _merge;
    //return gulp.src(srcDir)
