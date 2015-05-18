@@ -1,5 +1,5 @@
-//= include ../bower_components/q/q.js
-//= include ../bower_components/regression-js/build/regression.min.js
+// include ../bower_components/q/q.js
+// include ../bower_components/regression-js/build/regression.min.js
 
 
 'use strict';
@@ -35,7 +35,7 @@ var UXHand = new function() {
 			return;
 		}
 
-		this._synchronize().then(function() {
+		this._synchronize(function() {
 			console.log("_synchronize.then");
 
 			UXHand._setupListeners();
