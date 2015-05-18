@@ -6,6 +6,10 @@ html, body {
 	min-height : 100%;
 	display : block;
 }
+body {
+	margin : 0;
+	padding : 30px;
+}
 
 iframe {
 	position : absolute;
