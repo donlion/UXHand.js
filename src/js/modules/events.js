@@ -1,18 +1,19 @@
 this._events = {
 	
 	'touchstart': function(e) {
-		var dataObj = e.originalEvent;
+		var dataObj = e;
+		console.log("TOUCHSTART", e);
 		if (!dataObj) {
 			dataObj = e;
 		}
 
 		UXHand._last.start = dataObj;
 
-		console.log('TOUCH START', e);
 	},
 
 	'touchend': function(e) {
-		var dataObj = e.originalEvent;
+		var dataObj = e;
+		console.log("TOUCHEND", e);
 
 		if (!dataObj) {
 			console.log('!dataObj');
@@ -21,15 +22,19 @@ this._events = {
 
 		UXHand._last.end = dataObj.changedTouches;
 
-
-		console.log('TOUCH END', UXHand._last.end);
-
 		UXHand.cycle();
 	},
 
 	'touchmove': function(e) {
+		console.log(e.touches[0].clientX);
 		UXHand._last.moved = true;
-		UXHand._last.drag.push(e);
+
+		if (UXHand._last.drag.indexOf(e) == -1) {
+			UXHand._last.drag.push({
+				"x": e.touches[0].clientY,
+				"y": e.touches[0].clientX
+			});
+		}
 	}
 
 

@@ -11,6 +11,9 @@ this.cycle = function() {
 		this._domClasses(_data);
 
 		this._synchronize();
+
+		this._last.move = false;
+		this._last.drag = [];
 	}
 
 };

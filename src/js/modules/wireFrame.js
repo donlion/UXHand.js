@@ -30,7 +30,7 @@ this.wireFrame = new function() {
 		var rendering = [
 			"<div ",
 			"style='",
-			"position:absolute;",
+			"position:fixed;",
 			"top:0;",
 			"bottom:0;",
 			"left:",
@@ -44,13 +44,15 @@ this.wireFrame = new function() {
 			"' />"
 		]; //ErrorGap
 
-		$("body").prepend(rendering.join(""))
+		//$("body").prepend(rendering.join(""));
+		document.body.innerHTML += rendering.join("");
+
 
 
 		rendering = [
 			"<div class='lefthand'",
 			"style='",
-			"position:absolute;",
+			"position:fixed;",
 			"bottom:0;",
 			"left:0;",
 			"width:",
@@ -59,14 +61,17 @@ this.wireFrame = new function() {
 			"height:",
 			(screen.height*0.575),
 			"px;",
-			"background-color:#3F51B5;opacity:1;",
+			"background-color:#3F51B5;opacity:.3;",
 			"' />"
 			]; //LeftHandArea
-		$("body").prepend(rendering.join(""));
+
+		//$("body").prepend(rendering.join(""));
+		document.body.innerHTML += rendering.join("");
+
 		rendering = [
 			"<div class='righthand'",
 			"style='",
-			"position:absolute;",
+			"position:fixed;",
 			"bottom:0;",
 			"right:0;",
 			"width:",
@@ -75,10 +80,11 @@ this.wireFrame = new function() {
 			"height:",
 			(screen.height*0.575),
 			"px;",
-			"background-color:#3F51B5;opacity:1;",
+			"background-color:#3F51B5;opacity:.3;",
 			"' />"
 			]; //LeftHandArea
-		$("body").prepend(rendering.join(""));
+		//$("body").prepend(rendering.join(""));
+		document.body.innerHTML += rendering.join("");
 	};
 
 

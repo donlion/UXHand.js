@@ -1,5 +1,5 @@
-//= include ../bower_components/q/q.js
-//= include ../bower_components/regression-js/build/regression.min.js
+// include ../bower_components/q/q.js
+// include ../bower_components/regression-js/build/regression.min.js
 
 
 'use strict';
@@ -8,6 +8,10 @@
 
 
 var UXHand = new function() {
+
+	this.isIOS = function() {
+		return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
+	};
 
 	//= include modules/synchronize.js
 	//= include modules/compatibility.js
@@ -35,7 +39,7 @@ var UXHand = new function() {
 			return;
 		}
 
-		this._synchronize().then(function() {
+		this._synchronize(function() {
 			console.log("_synchronize.then");
 
 			UXHand._setupListeners();
@@ -60,6 +64,7 @@ var UXHand = new function() {
 		drag: [],
 		moved: false
 	};
+
 
 };
 

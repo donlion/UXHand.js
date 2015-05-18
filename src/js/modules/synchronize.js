@@ -1,6 +1,5 @@
-this._synchronize = function() {
+this._synchronize = function(callback) {
 	console.log("_synchronize");
-	var deferred = Q.defer();
 
 
 	var localData = JSON.parse(localStorage.getItem("UXHandData"));
@@ -12,11 +11,11 @@ this._synchronize = function() {
 		&& localData
 		) {
 		this._data = localData;
-		deferred.resolve();
 	} else {
 		localStorage.setItem("UXHandData", JSON.stringify(this._data));
 	}
 
-
-	return deferred.promise;
+	if (callback) {
+		callback();
+	}
 };

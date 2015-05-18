@@ -9,10 +9,22 @@ this._calc = function() {
 	var output = [];
 
 
+	// var vectors = [
+	// 	{
+	// 		y: _last.start.touches[0].clientY,
+	// 		x: _last.start.touches[0].clientX
+	// 	},
+	// 	{
+	// 		y: _last.end[0].clientY,
+	// 		x: _last.end[0].clientX
+	// 	}
+	// ];
+
+
 	var vectors = [
 		{
-			y: _last.start.touches[0].clientY,
-			x: _last.start.touches[0].clientX
+			y: _last.start.pageY,
+			x: _last.start.pageX
 		},
 		{
 			y: _last.end[0].clientY,
@@ -20,6 +32,7 @@ this._calc = function() {
 		}
 	];
 
+	console.log(vectors);
 
 
 	var drag = function(output) {
@@ -34,19 +47,33 @@ this._calc = function() {
 		} else if (vectors[0].y == vectors[1].y) {
 			output.push("horizontal");
 		} else {
-			output.push("downw");
+			output.push("down");
 		}
 
+		console.log(UXHand.isIOS());
 
-		/*
-		Measure direction X
-		*/
-		if (vectors[0].x < vectors[1].x) { //greater than, because the browser calculates from top left
-			output.push("right");
-		} else if (vectors[0].x == vectors[1].x) {
-			output.push("vertical");
+		if (UXHand.isIOS()) {
+			if (vectors[0].x < vectors[1].x) { //greater than, because the browser calculates from top left
+				output.push("left");
+			} else if (vectors[0].x == vectors[1].x) {
+				output.push("vertical");
+			} else {
+				output.push("right");
+			}
 		} else {
-			output.push("left");
+
+
+			/*
+			Measure direction X
+			*/
+			if (vectors[0].x < vectors[1].x) { //greater than, because the browser calculates from top left
+				output.push("right");
+			} else if (vectors[0].x == vectors[1].x) {
+				output.push("vertical");
+			} else {
+				output.push("left");
+			}
+
 		}
 
 	};
@@ -106,21 +133,23 @@ this._calc = function() {
 		};
 
 		[].forEach.call(_last.drag, function(drag, index) {
-			var dragData = _last.drag[index].touches[0];
+			// var dragData = _last.drag[index].touches[0];
+			var position = _last.drag[index];
 
-			var position = {
-				x: dragData.clientX,
-				y: dragData.clientY
-			};
+			// var position = {
+			// 	x: dragData.clientX,
+			// 	y: dragData.clientY
+			// };
 
 			if (_last.drag[index+1]) {
 
-				var nextDragData = _last.drag[index+1].touches[0];
+				// var nextDragData = _last.drag[index+1].touches[0];
+				var nextPosition = _last.drag[index+1];
 
-				var nextPosition = {
-					x: nextDragData.clientX,
-					y: nextDragData.clientY
-				};
+				// var nextPosition = {
+				// 	x: nextDragData.clientX,
+				// 	y: nextDragData.clientY
+				// };
 
 
 				if (
