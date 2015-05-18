@@ -2137,7 +2137,6 @@ var UXHand = new function() {
 	
 	
 	
-	
 		if (_last.moved) {
 			output.push("Move detected");
 	
@@ -2158,6 +2157,70 @@ var UXHand = new function() {
 				console.log("Right hand");
 				this._data.scores.right++;
 			}
+		} else {
+	
+			console.log("_last", _last);
+	
+			var measurePath = {
+				left: 0,
+				right : 0
+			};
+	
+			[].forEach.call(_last.drag, function(drag, index) {
+				var dragData = _last.drag[index].touches[0];
+	
+				var position = {
+					x: dragData.clientX,
+					y: dragData.clientY
+				};
+	
+				if (_last.drag[index+1]) {
+	
+					var nextDragData = _last.drag[index+1].touches[0];
+	
+					var nextPosition = {
+						x: nextDragData.clientX,
+						y: nextDragData.clientY
+					};
+	
+	
+					if (
+						nextPosition.x > position.x
+						&& nextPosition.y < position.y
+						) {
+						measurePath.right++;
+					} else if (
+						nextPosition.x < position.x 
+						&& nextPosition.y < position.y
+						) {
+						measurePath.left++;
+					} else if (
+						nextPosition.x > position.x
+						&& nextPosition.y > position.y
+						) {
+						measurePath.left++;
+					} else if (
+						nextPosition.x < position.x
+						&& nextPosition.y > position.y
+						) {
+						measurePath.right++;
+					}
+	
+	
+				}
+	
+			});
+	
+			if (measurePath.left > measurePath.right) {
+				console.error("LEFT");
+				UXHand._data.scores.left++;
+			} else if (measurePath.right > measurePath.left) {
+				console.error("RIGHT");
+				UXHand._data.scores.right++;
+			}
+	
+	
+	
 		}
 	
 	
@@ -2313,6 +2376,8 @@ var UXHand = new function() {
 	
 	};
 
+
+	this.version = '0.2.2';
 
 	this.init = function() {
 		console.log("init");
@@ -2685,270 +2750,12 @@ var UXHand = new function(options) {
 		this.touches.push(touch);
 
 	};
-	this.touchStart = function(e) {
-	
-		var dataObj = e.originalEvent;
-	
-		if (!dataObj) {
-			dataObj = e;
-		}
-	
-		this.DOM.textField.prepend(e.type+": "+dataObj.changedTouches[0].clientX+"<br />");
-		
-	
-		this.touch.start = dataObj;
-	
-		console.log("TOUCH START", e);
-	
-	};
 
-	this.touchEnd = function(e) {
-	
-		var dataObj = e.originalEvent;
-	
-		if (!dataObj) {
-			console.log("!dataObj");
-			dataObj = e;
-		}
-	
-		_this.touch.end = dataObj.changedTouches;
-	
-	
-		console.log("TOUCHEND", _this.touch.end);
-	
-	
-		if (this.touch.start) {
-			this.processor.init();
-		}
-	
-	};
+	//= include modules/touchstart.js
 
-	this.processor = new function() {
-	
-		this.type = "touch";
-	
-	
-		this.init = function() {
-	
-			var touch = _this.touch;
-	
-			var output = "Processor initiated\n";
-	
-			if (touch.moved) {
-				output += "... move detected";
-	
-				this.drag();
-			} else {
-				output += "... touch detected";
-	
-				this.tap();
-			}
-	
-			$("body").append(output);
-	
-			this.end();
-		};
-	
-	
-		this.end = function() {
-			_this.setTouch();
-		};
-	
-	
-		this.drag = function() {
-	
-	
-		
-	
-	
-			var touch = _this.touch;
-	
-	
-		
-	
-	
-			var vectors = [
-	
-	
-				{
-	
-	
-					y: touch.start.touches[0].clientY,
-	
-	
-					x: touch.start.touches[0].clientX
-	
-	
-				},
-	
-	
-				{
-	
-	
-					y: touch.end.clientY,
-	
-	
-					x: touch.end.clientX
-	
-	
-				}
-	
-	
-			];
-	
-	
-		
-	
-	
-			console.log("vectors", touch.end);
-	
-	
-		
-	
-	
-			var directionY = function() {
-	
-	
-				if (vectors[0].y > vectors[1].y) { //greater than, because the browser calculates from top left
-	
-	
-					$("#textfield").prepend("it's upwards<br />");
-	
-	
-					return "up";
-	
-	
-		
-	
-	
-				} else if (vectors[0].y == vectors[1].y) {
-	
-	
-					$("#textfield").prepend("it's horizontal<br />");
-	
-	
-					return "none";
-	
-	
-		
-	
-	
-				} else {
-	
-	
-					$("#textfield").prepend("it's downwards<br />");
-	
-	
-					return "down";
-	
-	
-		
-	
-	
-				}
-	
-	
-			};
-	
-	
-		
-	
-	
-			var directionX = function() {
-	
-	
-				if (vectors[0].x < vectors[1].x) { //greater than, because the browser calculates from top left
-	
-	
-					$("#textfield").prepend("it's rightwards<br />");
-	
-	
-					return "right";
-	
-	
-		
-	
-	
-				} else if (vectors[0].x == vectors[1].x) {
-	
-	
-					$("#textfield").prepend("it's vertical<br />");
-	
-	
-					return "none";
-	
-	
-		
-	
-	
-				} else {
-	
-	
-					$("#textfield").prepend("it's leftwards<br />");
-	
-	
-					return "left";
-	
-	
-		
-	
-	
-				}
-	
-	
-			};
-	
-	
-		
-	
-	
-			// directionY();
-	
-	
-			// directionX();
-	
-	
-		
-	
-	
-		
-	
-	
-			_this.createTouch({
-	
-	
-				type: "drag",
-	
-	
-				directionX: directionX(),
-	
-	
-				directionY: directionY(),
-	
-	
-				distance: 0,
-	
-	
-				hand: "none",
-	
-	
-				score: 0
-	
-	
-			});
-	
-	
-		
-	
-	
-		};
-	
-	
-		//= include processes/tap.js
-	
-	};
-	
+	//= include modules/touchend.js
 
+	//= include modules/processor.js
 
 
 };

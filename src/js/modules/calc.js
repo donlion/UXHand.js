@@ -76,7 +76,6 @@ this._calc = function() {
 
 
 
-
 	if (_last.moved) {
 		output.push("Move detected");
 
@@ -97,6 +96,70 @@ this._calc = function() {
 			console.log("Right hand");
 			this._data.scores.right++;
 		}
+	} else {
+
+		console.log("_last", _last);
+
+		var measurePath = {
+			left: 0,
+			right : 0
+		};
+
+		[].forEach.call(_last.drag, function(drag, index) {
+			var dragData = _last.drag[index].touches[0];
+
+			var position = {
+				x: dragData.clientX,
+				y: dragData.clientY
+			};
+
+			if (_last.drag[index+1]) {
+
+				var nextDragData = _last.drag[index+1].touches[0];
+
+				var nextPosition = {
+					x: nextDragData.clientX,
+					y: nextDragData.clientY
+				};
+
+
+				if (
+					nextPosition.x > position.x
+					&& nextPosition.y < position.y
+					) {
+					measurePath.right++;
+				} else if (
+					nextPosition.x < position.x 
+					&& nextPosition.y < position.y
+					) {
+					measurePath.left++;
+				} else if (
+					nextPosition.x > position.x
+					&& nextPosition.y > position.y
+					) {
+					measurePath.left++;
+				} else if (
+					nextPosition.x < position.x
+					&& nextPosition.y > position.y
+					) {
+					measurePath.right++;
+				}
+
+
+			}
+
+		});
+
+		if (measurePath.left > measurePath.right) {
+			console.error("LEFT");
+			UXHand._data.scores.left++;
+		} else if (measurePath.right > measurePath.left) {
+			console.error("RIGHT");
+			UXHand._data.scores.right++;
+		}
+
+
+
 	}
 
 
