@@ -66,6 +66,9 @@ var UXHand = new function() {
 	};
 
 
+	this.tracking = [];
+
+
 };
 
 
