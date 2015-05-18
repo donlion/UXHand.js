@@ -9,6 +9,10 @@
 
 var UXHand = new function() {
 
+	this.isIOS = function() {
+		return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
+	};
+
 	//= include modules/synchronize.js
 	//= include modules/compatibility.js
 	//= include modules/options.js
@@ -60,6 +64,7 @@ var UXHand = new function() {
 		drag: [],
 		moved: false
 	};
+
 
 };
 
