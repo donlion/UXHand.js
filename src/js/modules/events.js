@@ -30,12 +30,9 @@ this._events = {
 		UXHand._last.moved = true;
 
 		if (UXHand._last.drag.indexOf(e) == -1) {
-			console.log(e);
 			UXHand._last.drag.push({
 				"x": e.touches[0].clientY,
-				"y": e.touches[0].clientX,
-				"pageX": e.touches[0].pageX,
-				"pageY": (e.touches[0].pageY-window.pageYOffset)
+				"y": e.touches[0].clientX
 			});
 		}
 	}
