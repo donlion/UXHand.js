@@ -24,4 +24,4 @@ When UXHand.js is included through a script-tag to your DOM, it'll run automatic
 `UXHand.destroy()` will clear all recorded data saved to localStorage
 
 #Demo
-Visit [donlion.github.io/UXHand.js](donlion.github.io/UXHand.js) from a touch-device and start scrolling. The threshold is lowered to 10 for test purpose only.
+Visit [donlion.github.io/UXHand.js](http://donlion.github.io/UXHand.js) from a touch-device and start scrolling. The threshold is lowered to 10 for test purpose only.
