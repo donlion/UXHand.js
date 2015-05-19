@@ -15,3 +15,10 @@ window.UXHandOptions = {
 
 ##How
 When UXHand is able to determine if the user is left or right handed (measured from swipes, taps, scrolls etc), it'll add either "lefthand" or "righthand" to the HTML-element
+
+##Usage
+Run `bower install uxhand.js` to grap the latest or simply download it from the build-folder.
+When UXHand.js is included through a script-tag to your DOM, it'll run automatically.
+
+##Clearing
+`UXHand.destroy()` will clear all recorded data saved to localStorage
