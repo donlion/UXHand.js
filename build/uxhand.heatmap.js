@@ -721,10 +721,29 @@ UXHand.HeatMap = new function() {
 				height = screen.height,
 				len = 200;
 
+
+		var points = function() {
+			var returnVal = [];
+			[].forEach.call(UXHand.tracking, function(tracking, index) {
+
+				returnVal.push({
+					x: tracking.pageX,
+					y: tracking.pageY,
+					count: 5
+				})
+
+			});
+
+			return returnVal;
+		};
+
+
+		console.log(points());
+
 		var data = {
 			max: 20,
 			min: 0,
-			data: points
+			data: points()
 		};
 
 		console.log(heatMapInstance);
