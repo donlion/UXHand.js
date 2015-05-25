@@ -99,32 +99,38 @@ var UXHand = new function() {
 			if (UXHand.HeatMap) {
 				var data = this._last;
 	
-				if (data.start) {
+				if (data.start && data.start.pageX != 0 && data.start.pageY != 0) {
 					this.tracking.push({
 						x: data.start.pageX,
 						y: data.start.pageY,
+						pageX: data.start.pageX,
+						pageY: (data.start.pageY-window.pageYOffset),
 						count: 5
 					});
 				}
 	
-				if (data.end) {
+				if (data.end && data.end[0].clientY != 0 && data.end[0].clientX != 0) {
 					this.tracking.push({
 						x: data.end[0].clientX,
 						y: data.end[0].clientY,
+						pageX: data.end[0].pageX,
+						pageY: (data.end[0].pageY-window.pageYOffset),
 						count: 5
 					});
 				}
 	
-				[].forEach.call(data.drag, function(drag, index) {
-					if (drag.x == 0 && drag.y == 0) {
-						return;
-					}
-					UXHand.tracking.push({
-						x: drag.x,
-						y: drag.y,
-						count: 5 
+				if (data.drag.length != 0) {
+					[].forEach.call(data.drag, function(drag, index) {
+						console.log(drag.x, drag.y);
+						UXHand.tracking.push({
+							x: drag.x,
+							y: drag.y,
+							pageX: drag.pageX,
+							pageY: (drag.pageY-window.pageYOffset),
+							count: 5 
+						});
 					});
-				});
+				}
 	
 			}
 	
@@ -187,9 +193,12 @@ var UXHand = new function() {
 			UXHand._last.moved = true;
 	
 			if (UXHand._last.drag.indexOf(e) == -1) {
+				console.log(e);
 				UXHand._last.drag.push({
 					"x": e.touches[0].clientY,
-					"y": e.touches[0].clientX
+					"y": e.touches[0].clientX,
+					"pageX": e.touches[0].pageX,
+					"pageY": (e.touches[0].pageY-window.pageYOffset)
 				});
 			}
 		}
@@ -396,35 +405,35 @@ var UXHand = new function() {
 	this._domClasses = function(_data) {
 	
 		var update = function(value) {
-			var classes = value.split(',');
+	
+			var classes = value.split(','),
+					UXHandClasses = ['lefthand', 'righthand', 'bothhands'];
 	
 			var html = document.querySelector('html'),
-					htmlCurrent = html.className.indexOf(' ') > -1 ? html.className.split(' ') : [];
+					htmlClass = html.className;
 	
-			var update = htmlCurrent;
+			var outputClasses = function() {
 	
-			classes.forEach(function(name) {
-				update.push(name);
-			});
+				UXHandClasses.forEach(function(className) {
 	
-			console.log("update", update);
-			html.className = update.join(' ');
+					if (value.indexOf(className) >= 0) {
+	
+						if (htmlClass.indexOf(className) == -1) {
+							htmlClass += ' '+className;
+						} 
+	
+					} else {
+						htmlClass = htmlClass.replace(' '+className, '');
+					}
+	
+				});
+	
+				return htmlClass;
+			};
+	
+			html.className = outputClasses();
 		};
 	
-		var reset = function() {
-			console.log('reset');
-			var html = document.querySelector('html'),
-					htmlCurrent = html.className.split(' ');
-			
-			var inHouseClasses = ['righthand', 'lefthand', 'bothhands'];
-	
-			inHouseClasses.forEach(function(inHouse) {
-				htmlCurrent.splice(inHouse, 1);
-			});
-	
-			html.className = htmlCurrent;
-	
-		};
 	
 	
 		var count = _data.scores.left+_data.scores.right+_data.scores.both;
@@ -442,10 +451,8 @@ var UXHand = new function() {
 		console.log(_data.scores.left, _data.scores.right*(1+this.options().certainty));
 	
 		if (_data.scores.left > _data.scores.right*(1+this.options().certainty)) {
-			reset();
 			update('lefthand');
 		} else if (_data.scores.right > _data.scores.left*(1+this.options().certainty)) {
-			reset();
 			update('righthand');
 		}
 	
@@ -605,354 +612,3 @@ var UXHand = new function() {
 
 
 UXHand.init();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-_calc
-last, left/right?
-move => regression
-
-_last
-touch {
-	xCoord,
-	yCoord
-},
-move {
-	first {
-	xCoord,yCoord
-	},
-	drag [array],
-	last {
-	xCoord, yCoord
-	}
-}
-
-
-_destroy
-kill listeners
-remove classes if options
-clear all data if options
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-var UXHand = new function(options) {
-
-	var _this = this;
-
-	this.options = {
-		element: "textfield"
-	};
-
-	this.DOM = new function() {
-		this.textField = $("#textfield");
-	};
-
-	this.setTouch = function() {
-		_this.touch = {
-			start: false,
-			end: false,
-			moved: false,
-		};
-	};
-
-	this.touches = [];
-
-
-
-
-	this.touchTest = function() {  
-	  try {  
-	    document.createEvent("TouchEvent");  
-	    return true;  
-	  } catch (e) {  
-	    return false;  
-		}  
-	};
-
-	this.init = function() {
-		console.log("UXHand initiated");
-		this.setTouch();
-		this.wireFrame.setup();
-		this.wireFrame.render();
-
-		if (this.touchTest()) {
-			this.DOM.textField.text("Welcome.");
-		} else {
-			this.DOM.textField.text("Hello.");
-		}
-
-		$(window).on("touchstart", function(e) {
-			UXHand.touchStart(e);
-		});
-
-		$(window).on("touchend", function(e) {
-			UXHand.touchEnd(e);
-		});
-
-		$(window).on("touchmove", function(e) {
-			UXHand.touch.moved = true;
-		});
-	};
-
-	this.wireFrame = new function() {
-
-	
-
-		this.areas = function() {
-
-			var gap = UXHand.options().certainty,
-
-					x = screen.width*gap,
-
-					w = (screen.width/2)-(x/2);
-
-	
-
-			return {
-
-				gap: gap,
-
-				x: x,
-
-				w: w
-
-			};
-
-		};
-
-	
-
-		this.errorGap = function() {
-
-	
-
-			var area = this.areas();
-
-	
-
-			return {
-
-				x: [0, area.w+area.x]
-
-			};
-
-	
-
-		};
-
-	
-
-		this.render = function() {
-
-			console.log(this.errorGap());
-
-	
-
-			var area = this.areas();
-
-	
-
-			var rendering = [
-
-				"<div ",
-
-				"style='",
-
-				"position:fixed;",
-
-				"top:0;",
-
-				"bottom:0;",
-
-				"left:",
-
-				area.w,
-
-				"px;",
-
-				"width:",
-
-				area.x,
-
-				"px;",
-
-				"background-color:rgba(0,0,0,0.2);",
-
-				"display:inline-block;",
-
-				"' />"
-
-			]; //ErrorGap
-
-	
-
-			//$("body").prepend(rendering.join(""));
-
-			document.body.innerHTML += rendering.join("");
-
-	
-
-	
-
-	
-
-			rendering = [
-
-				"<div class='lefthand'",
-
-				"style='",
-
-				"position:fixed;",
-
-				"bottom:0;",
-
-				"left:0;",
-
-				"width:",
-
-				area.w,
-
-				"px;",
-
-				"height:",
-
-				(screen.height*0.575),
-
-				"px;",
-
-				"background-color:#3F51B5;opacity:.3;",
-
-				"' />"
-
-				]; //LeftHandArea
-
-	
-
-			//$("body").prepend(rendering.join(""));
-
-			document.body.innerHTML += rendering.join("");
-
-	
-
-			rendering = [
-
-				"<div class='righthand'",
-
-				"style='",
-
-				"position:fixed;",
-
-				"bottom:0;",
-
-				"right:0;",
-
-				"width:",
-
-				area.w,
-
-				"px;",
-
-				"height:",
-
-				(screen.height*0.575),
-
-				"px;",
-
-				"background-color:#3F51B5;opacity:.3;",
-
-				"' />"
-
-				]; //LeftHandArea
-
-			//$("body").prepend(rendering.join(""));
-
-			document.body.innerHTML += rendering.join("");
-
-		};
-
-	
-
-	
-
-	
-
-	};
-
-
-
-	this.createTouch = function(args) {
-
-		var touch = {
-			type: "touch",
-			directionX: null,
-			directionY: null,
-			distance: 0,
-			hand: null,
-			score: null
-		};
-
-		$.extend(touch, args);
-
-		this.touches.push(touch);
-
-	};
-
-	//= include modules/touchstart.js
-
-	//= include modules/touchend.js
-
-	//= include modules/processor.js
-
-
-};
-
-UXHand.init();
-*/
