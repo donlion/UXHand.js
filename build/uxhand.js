@@ -121,7 +121,7 @@ var UXHand = new function() {
 	
 				if (data.drag.length != 0) {
 					[].forEach.call(data.drag, function(drag, index) {
-						console.log(drag.x, drag.y);
+						// console.log(drag.x, drag.y);
 						UXHand.tracking.push({
 							x: drag.x,
 							y: drag.y,
@@ -147,17 +147,25 @@ var UXHand = new function() {
 		var rootElement = document.body;
 		//rootElement = document.querySelector("iframe").contentDocument.body;
 	
-		rootElement.addEventListener('touchstart', function(e) {
-			UXHand._events.touchstart(e);
-		});
+		if (rootElement) {
 	
-		rootElement.addEventListener('touchend', function(e) {
-			UXHand._events.touchend(e);
-		});
+			rootElement.addEventListener('touchstart', function(e) {
+				UXHand._events.touchstart(e);
+			});
 	
-		rootElement.addEventListener('touchmove', function(e) {
-			UXHand._events.touchmove(e);
-		});
+			rootElement.addEventListener('touchend', function(e) {
+				UXHand._events.touchend(e);
+			});
+	
+			rootElement.addEventListener('touchmove', function(e) {
+				UXHand._events.touchmove(e);
+			});
+	
+		} else {
+			document.addEventListener("DOMContentLoaded", function() {
+				UXHand._setupListeners();
+			}, false);
+		}
 	
 	};
 
@@ -189,11 +197,11 @@ var UXHand = new function() {
 		},
 	
 		'touchmove': function(e) {
-			console.log(e.touches[0].clientX);
+			// console.log(e.touches[0].clientX);
 			UXHand._last.moved = true;
 	
 			if (UXHand._last.drag.indexOf(e) == -1) {
-				console.log(e);
+				// console.log(e);
 				UXHand._last.drag.push({
 					"x": e.touches[0].clientY,
 					"y": e.touches[0].clientX,
@@ -231,8 +239,10 @@ var UXHand = new function() {
 	
 		var vectors = [
 			{
-				y: _last.start.pageY,
-				x: _last.start.pageX
+				// y: _last.start.pageY,
+				// x: _last.start.pageX
+				y: _last.start.touches[0].clientY,
+				x: _last.start.touches[0].clientX
 			},
 			{
 				y: _last.end[0].clientY,
@@ -261,7 +271,7 @@ var UXHand = new function() {
 			console.log(UXHand.isIOS());
 	
 			if (UXHand.isIOS()) {
-				if (vectors[0].x < vectors[1].x) { //greater than, because the browser calculates from top left
+				if (vectors[0].x < vectors[1].x) { //greater than, because iOS calculates from top right
 					output.push("left");
 				} else if (vectors[0].x == vectors[1].x) {
 					output.push("vertical");
@@ -269,8 +279,6 @@ var UXHand = new function() {
 					output.push("right");
 				}
 			} else {
-	
-	
 				/*
 				Measure direction X
 				*/
@@ -283,6 +291,9 @@ var UXHand = new function() {
 				}
 	
 			}
+	
+	
+			handSize(vectors[0], vectors[1]);
 	
 		};
 	
@@ -300,6 +311,67 @@ var UXHand = new function() {
 			}
 	
 		};
+	
+	
+		/*
+		Handsize measurement in progress
+		*/
+	
+	
+		var handSize = function() {
+			return;
+		};
+	
+		// var handSize = function(vOne, vTwo) {
+	
+		// 	function aScreen() {
+		// 		var lowerY = vOne.y > vTwo.y ? vTwo : vOne,
+		// 				biggerY = vOne.y > vTwo.y ? vOne : vTwo;
+	
+		// 		var lowerX = vOne.x > vTwo.x ? vTwo : vOne,
+		// 				biggerX = vOne.x > vTwo.x ? vOne : vTwo;
+	
+		// 		console.log("Y", lowerY, biggerY);
+	
+		// 		var aScreen = {
+		// 			width: biggerX.x - lowerX.x,
+		// 			height: biggerY.y - lowerY.y,
+		// 			offset: {
+		// 				x: lowerX.x,
+		// 				y: lowerY.y
+		// 			}
+		// 		};
+	
+		// 		aScreen.ratio = aScreen.height/aScreen.width;
+	
+		// 		return aScreen;
+		// 	};
+	
+	
+		// 	function createExample() {
+	
+		// 		var settings = aScreen();
+	
+		// 		var element = document.createElement('DIV');
+		// 		element.style.height = settings.height+"px";
+		// 		element.style.width = settings.width+"px";
+		// 		element.style.position = 'fixed';
+		// 		element.style.bottom = settings.offset.y+"px";
+		// 		element.style.left = settings.offset.x+"px";
+		// 		element.style.backgroundColor = "rgba(0,0,0,0.2)";
+	
+		// 		console.log(settings);
+	
+		// 		document.body.appendChild(element);
+	
+		// 	};
+	
+		// 	console.log('artificialScreen', aScreen());
+		// 	console.log(vOne, vTwo);
+	
+		// 	createExample();
+	
+		// };
 	
 	
 	
@@ -470,101 +542,9 @@ var UXHand = new function() {
 	
 	};
 
-	this.wireFrame = new function() {
-	
-		this.areas = function() {
-			var gap = UXHand.options().certainty,
-					x = screen.width*gap,
-					w = (screen.width/2)-(x/2);
-	
-			return {
-				gap: gap,
-				x: x,
-				w: w
-			};
-		};
-	
-		this.errorGap = function() {
-	
-			var area = this.areas();
-	
-			return {
-				x: [0, area.w+area.x]
-			};
-	
-		};
-	
-		this.render = function() {
-			console.log(this.errorGap());
-	
-			var area = this.areas();
-	
-			var rendering = [
-				"<div ",
-				"style='",
-				"position:fixed;",
-				"top:0;",
-				"bottom:0;",
-				"left:",
-				area.w,
-				"px;",
-				"width:",
-				area.x,
-				"px;",
-				"background-color:rgba(0,0,0,0.2);",
-				"display:inline-block;",
-				"' />"
-			]; //ErrorGap
-	
-			//$("body").prepend(rendering.join(""));
-			document.body.innerHTML += rendering.join("");
-	
-	
-	
-			rendering = [
-				"<div class='lefthand'",
-				"style='",
-				"position:fixed;",
-				"bottom:0;",
-				"left:0;",
-				"width:",
-				area.w,
-				"px;",
-				"height:",
-				(screen.height*0.575),
-				"px;",
-				"background-color:#3F51B5;opacity:.3;",
-				"' />"
-				]; //LeftHandArea
-	
-			//$("body").prepend(rendering.join(""));
-			document.body.innerHTML += rendering.join("");
-	
-			rendering = [
-				"<div class='righthand'",
-				"style='",
-				"position:fixed;",
-				"bottom:0;",
-				"right:0;",
-				"width:",
-				area.w,
-				"px;",
-				"height:",
-				(screen.height*0.575),
-				"px;",
-				"background-color:#3F51B5;opacity:.3;",
-				"' />"
-				]; //LeftHandArea
-			//$("body").prepend(rendering.join(""));
-			document.body.innerHTML += rendering.join("");
-		};
-	
-	
-	
-	};
 
 
-	this.version = '0.2.3';
+	this.version = '0.2.6';
 
 	this.init = function() {
 		console.log("init");

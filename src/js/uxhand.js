@@ -23,9 +23,8 @@ var UXHand = new function() {
 	//= include modules/domclasses.js
 	//= include modules/destroy.js
 
-	//=include modules/wireFrame.js
 
-	this.version = '0.2.3';
+	this.version = '0.2.6';
 
 	this.init = function() {
 		console.log("init");

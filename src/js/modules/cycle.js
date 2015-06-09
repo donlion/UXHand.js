@@ -38,7 +38,7 @@ this.cycle = function() {
 
 			if (data.drag.length != 0) {
 				[].forEach.call(data.drag, function(drag, index) {
-					console.log(drag.x, drag.y);
+					// console.log(drag.x, drag.y);
 					UXHand.tracking.push({
 						x: drag.x,
 						y: drag.y,

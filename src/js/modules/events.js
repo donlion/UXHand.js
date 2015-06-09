@@ -26,11 +26,11 @@ this._events = {
 	},
 
 	'touchmove': function(e) {
-		console.log(e.touches[0].clientX);
+		// console.log(e.touches[0].clientX);
 		UXHand._last.moved = true;
 
 		if (UXHand._last.drag.indexOf(e) == -1) {
-			console.log(e);
+			// console.log(e);
 			UXHand._last.drag.push({
 				"x": e.touches[0].clientY,
 				"y": e.touches[0].clientX,
