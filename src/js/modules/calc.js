@@ -21,10 +21,23 @@ this._calc = function() {
 	// ];
 
 
+	var pushHand = function(hand) {
+		if (hand == 'right') {
+			UXHand._data.scores.right++;
+			UXHand.session().add('right');
+		} else {
+			UXHand._data.scores.left++;
+			UXHand.session().add('left');
+		}
+	};
+
+
 	var vectors = [
 		{
-			y: _last.start.pageY,
-			x: _last.start.pageX
+			// y: _last.start.pageY,
+			// x: _last.start.pageX
+			y: _last.start.touches[0].clientY,
+			x: _last.start.touches[0].clientX
 		},
 		{
 			y: _last.end[0].clientY,
@@ -53,7 +66,7 @@ this._calc = function() {
 		console.log(UXHand.isIOS());
 
 		if (UXHand.isIOS()) {
-			if (vectors[0].x < vectors[1].x) { //greater than, because the browser calculates from top left
+			if (vectors[0].x < vectors[1].x) { //greater than, because iOS calculates from top right
 				output.push("left");
 			} else if (vectors[0].x == vectors[1].x) {
 				output.push("vertical");
@@ -61,8 +74,6 @@ this._calc = function() {
 				output.push("right");
 			}
 		} else {
-
-
 			/*
 			Measure direction X
 			*/
@@ -76,6 +87,9 @@ this._calc = function() {
 
 		}
 
+
+		handSize(vectors[0], vectors[1]);
+
 	};
 
 
@@ -85,13 +99,74 @@ this._calc = function() {
 
 		if (vectors[0].x < area.w) {
 			console.log("Left hand");
-			UXHand._data.scores.left++;
+			pushHand('left');
 		} else if (vectors[0].x > area.w+area.x) {
 			console.log("Right hand");
-			UXHand._data.scores.right++;
+			pushHand('right');
 		}
 
 	};
+
+
+	/*
+	Handsize measurement in progress
+	*/
+
+
+	var handSize = function() {
+		return;
+	};
+
+	// var handSize = function(vOne, vTwo) {
+
+	// 	function aScreen() {
+	// 		var lowerY = vOne.y > vTwo.y ? vTwo : vOne,
+	// 				biggerY = vOne.y > vTwo.y ? vOne : vTwo;
+
+	// 		var lowerX = vOne.x > vTwo.x ? vTwo : vOne,
+	// 				biggerX = vOne.x > vTwo.x ? vOne : vTwo;
+
+	// 		console.log("Y", lowerY, biggerY);
+
+	// 		var aScreen = {
+	// 			width: biggerX.x - lowerX.x,
+	// 			height: biggerY.y - lowerY.y,
+	// 			offset: {
+	// 				x: lowerX.x,
+	// 				y: lowerY.y
+	// 			}
+	// 		};
+
+	// 		aScreen.ratio = aScreen.height/aScreen.width;
+
+	// 		return aScreen;
+	// 	};
+
+
+	// 	function createExample() {
+
+	// 		var settings = aScreen();
+
+	// 		var element = document.createElement('DIV');
+	// 		element.style.height = settings.height+"px";
+	// 		element.style.width = settings.width+"px";
+	// 		element.style.position = 'fixed';
+	// 		element.style.bottom = settings.offset.y+"px";
+	// 		element.style.left = settings.offset.x+"px";
+	// 		element.style.backgroundColor = "rgba(0,0,0,0.2)";
+
+	// 		console.log(settings);
+
+	// 		document.body.appendChild(element);
+
+	// 	};
+
+	// 	console.log('artificialScreen', aScreen());
+	// 	console.log(vOne, vTwo);
+
+	// 	createExample();
+
+	// };
 
 
 
@@ -118,10 +193,10 @@ this._calc = function() {
 	if (output.indexOf("vertical") > -1) {
 		if (vectors[0].x < area.w) {
 			console.log("Left hand");
-			this._data.scores.left++;
+			pushHand('left');
 		} else if (vectors[0].x > area.w+area.x) {
 			console.log("Right hand");
-			this._data.scores.right++;
+			pushHand('right');
 		}
 	} else {
 
@@ -181,10 +256,10 @@ this._calc = function() {
 
 		if (measurePath.left > measurePath.right) {
 			console.error("LEFT");
-			UXHand._data.scores.left++;
+			pushHand('left');
 		} else if (measurePath.right > measurePath.left) {
 			console.error("RIGHT");
-			UXHand._data.scores.right++;
+			pushHand('right');
 		}
 
 

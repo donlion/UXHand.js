@@ -1,35 +1,35 @@
 this._domClasses = function(_data) {
 
 	var update = function(value) {
-		var classes = value.split(',');
+
+		var classes = value.split(','),
+				UXHandClasses = ['lefthand', 'righthand', 'bothhands'];
 
 		var html = document.querySelector('html'),
-				htmlCurrent = html.className.indexOf(' ') > -1 ? html.className.split(' ') : [];
+				htmlClass = html.className;
 
-		var update = htmlCurrent;
+		var outputClasses = function() {
 
-		classes.forEach(function(name) {
-			update.push(name);
-		});
+			UXHandClasses.forEach(function(className) {
 
-		console.log("update", update);
-		html.className = update.join(' ');
+				if (value.indexOf(className) >= 0) {
+
+					if (htmlClass.indexOf(className) == -1) {
+						htmlClass += ' '+className;
+					} 
+
+				} else {
+					htmlClass = htmlClass.replace(' '+className, '');
+				}
+
+			});
+
+			return htmlClass;
+		};
+
+		html.className = outputClasses();
 	};
 
-	var reset = function() {
-		console.log('reset');
-		var html = document.querySelector('html'),
-				htmlCurrent = html.className.split(' ');
-		
-		var inHouseClasses = ['righthand', 'lefthand', 'bothhands'];
-
-		inHouseClasses.forEach(function(inHouse) {
-			htmlCurrent.splice(inHouse, 1);
-		});
-
-		html.className = htmlCurrent;
-
-	};
 
 
 	var count = _data.scores.left+_data.scores.right+_data.scores.both;
@@ -47,10 +47,8 @@ this._domClasses = function(_data) {
 	console.log(_data.scores.left, _data.scores.right*(1+this.options().certainty));
 
 	if (_data.scores.left > _data.scores.right*(1+this.options().certainty)) {
-		reset();
 		update('lefthand');
 	} else if (_data.scores.right > _data.scores.left*(1+this.options().certainty)) {
-		reset();
 		update('righthand');
 	}
 
