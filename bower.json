@@ -23,6 +23,11 @@
     "leo",
     "orsnes"
   ],
+  "ignore": [
+    "src/",
+    "style.css",
+    "index.html"
+  ],
   "license": "MIT",
   "homepage": "https://github.com/donlion/UXHand.js"
 }
