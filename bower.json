@@ -23,7 +23,7 @@
     "leo",
     "orsnes"
   ],
-  "ignore": [
+  "ignore": [
     "src/",
     "style.css",
     "index.html"
