@@ -62,7 +62,8 @@ var UXHand = new function() {
 			destroyClasses: true,
 			destroyData: true,
 			root: document.body,
-			threshold: 50
+			threshold: 50,
+			sessionThreshold: 10
 		};
 	
 	
@@ -87,7 +88,7 @@ var UXHand = new function() {
 		try {
 			this._calc();
 		} catch(e) {
-			console.log("No touches to calculate", e);
+			console.log("No touches to calculate");
 		} finally {
 			var _data = this._data;
 	
@@ -237,6 +238,17 @@ var UXHand = new function() {
 		// ];
 	
 	
+		var pushHand = function(hand) {
+			if (hand == 'right') {
+				UXHand._data.scores.right++;
+				UXHand.session().add('right');
+			} else {
+				UXHand._data.scores.left++;
+				UXHand.session().add('left');
+			}
+		};
+	
+	
 		var vectors = [
 			{
 				// y: _last.start.pageY,
@@ -304,10 +316,10 @@ var UXHand = new function() {
 	
 			if (vectors[0].x < area.w) {
 				console.log("Left hand");
-				UXHand._data.scores.left++;
+				pushHand('left');
 			} else if (vectors[0].x > area.w+area.x) {
 				console.log("Right hand");
-				UXHand._data.scores.right++;
+				pushHand('right');
 			}
 	
 		};
@@ -398,10 +410,10 @@ var UXHand = new function() {
 		if (output.indexOf("vertical") > -1) {
 			if (vectors[0].x < area.w) {
 				console.log("Left hand");
-				this._data.scores.left++;
+				pushHand('left');
 			} else if (vectors[0].x > area.w+area.x) {
 				console.log("Right hand");
-				this._data.scores.right++;
+				pushHand('right');
 			}
 		} else {
 	
@@ -461,16 +473,65 @@ var UXHand = new function() {
 	
 			if (measurePath.left > measurePath.right) {
 				console.error("LEFT");
-				UXHand._data.scores.left++;
+				pushHand('left');
 			} else if (measurePath.right > measurePath.left) {
 				console.error("RIGHT");
-				UXHand._data.scores.right++;
+				pushHand('right');
 			}
 	
 	
 	
 		}
 	
+	
+	};
+
+	this.session = function() {
+	
+		var self = UXHand._session;
+	
+	
+		var add = function(hand) {
+			console.log('session.add');
+			if (self.hand == hand) {
+				self.count++;
+			} else {
+				self.hand = hand;
+				self.count = 1;
+			}
+	
+			sync();
+	
+		};
+	
+	
+	
+		var sync = function() {
+			if (self.count != 3) {
+				return;
+			}
+	
+			var html = document.querySelector('html'),
+					htmlClass = html.className;
+	
+			var newClass = htmlClass.replace(' templeft', '').replace(' tempright', '');
+			newClass += ' temp'+self.hand;
+	
+			html.className = newClass.trim();
+		};
+	
+	
+	
+	
+		return {
+			'data': {
+				hand: self.hand,
+				count: self.count,
+				threshold: self.threshold
+			},
+			add: add,
+			sync: sync
+		};
 	
 	};
 
@@ -572,7 +633,7 @@ var UXHand = new function() {
 
 
 
-	this.version = '0.2.6';
+	this.version = '0.3';
 
 	this.init = function() {
 		console.log("init");
@@ -597,6 +658,12 @@ var UXHand = new function() {
 	};
 
 
+	this._session = {
+		hand: null,
+		count: 0,
+		threshold: this.options().sessionThreshold
+	};
+
 	this._data = {
 		'scores': {
 			left: null,
@@ -604,6 +671,7 @@ var UXHand = new function() {
 			both: null
 		}
 	};
+
 
 	this._last = {
 		start: null,

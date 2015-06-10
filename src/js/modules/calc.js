@@ -21,6 +21,17 @@ this._calc = function() {
 	// ];
 
 
+	var pushHand = function(hand) {
+		if (hand == 'right') {
+			UXHand._data.scores.right++;
+			UXHand.session().add('right');
+		} else {
+			UXHand._data.scores.left++;
+			UXHand.session().add('left');
+		}
+	};
+
+
 	var vectors = [
 		{
 			// y: _last.start.pageY,
@@ -88,10 +99,10 @@ this._calc = function() {
 
 		if (vectors[0].x < area.w) {
 			console.log("Left hand");
-			UXHand._data.scores.left++;
+			pushHand('left');
 		} else if (vectors[0].x > area.w+area.x) {
 			console.log("Right hand");
-			UXHand._data.scores.right++;
+			pushHand('right');
 		}
 
 	};
@@ -182,10 +193,10 @@ this._calc = function() {
 	if (output.indexOf("vertical") > -1) {
 		if (vectors[0].x < area.w) {
 			console.log("Left hand");
-			this._data.scores.left++;
+			pushHand('left');
 		} else if (vectors[0].x > area.w+area.x) {
 			console.log("Right hand");
-			this._data.scores.right++;
+			pushHand('right');
 		}
 	} else {
 
@@ -245,10 +256,10 @@ this._calc = function() {
 
 		if (measurePath.left > measurePath.right) {
 			console.error("LEFT");
-			UXHand._data.scores.left++;
+			pushHand('left');
 		} else if (measurePath.right > measurePath.left) {
 			console.error("RIGHT");
-			UXHand._data.scores.right++;
+			pushHand('right');
 		}
 
 

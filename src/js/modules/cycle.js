@@ -4,7 +4,7 @@ this.cycle = function() {
 	try {
 		this._calc();
 	} catch(e) {
-		console.log("No touches to calculate", e);
+		console.log("No touches to calculate");
 	} finally {
 		var _data = this._data;
 

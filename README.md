@@ -5,16 +5,25 @@ UXHand.js _does not_ track user by default. Data is only stored in localStorage 
 ##Options
 ```javascript
 window.UXHandOptions = {
-  certainty: 0.2, //certainty about left or right hand
-  destroyClasses: true, //not doing anything yet
-  destroyData: true, //not doing anything yet
-  root: document.body, //define the root of the listener - be carefull
-  threshold: 50 //how big should our data collection be, before doing measurements?
+  certainty: 0.2,
+  /* certainty about left or right hand */
+  root: document.body,
+  /* define the root of the listener - be carefull */
+  threshold: 50,
+  /* how big should our data collection be, before doing measurements? */
+  sessionThreshold: 3
+  /* the count of swipes to be done before we can define left or right hand usage */
 };
 ```
 
 ##How
-When UXHand is able to determine if the user is left or right handed (measured from swipes, taps, scrolls etc), it'll add either **"lefthand"** or **"righthand"** to the HTML-element
+###Basic classes
+When UXHand is able to determine if the user is left or right handed (measured from swipes, taps, scrolls etc), it'll add either ```lefthand``` or ```righthand``` to the HTML-element
+
+###Temporary classes
+UXHand strives to meet the user expectations and adopt fluid to the users interactions. Therefore UXHand also carries temporary-classes. These classes are fired after ```window.UXHandOptions.sessionThreshold```events of the same kind. Say the user is right handed but temporary uses your website with his or hers left hand. After 3 scrolls we'll know what hand, they're probably using at the moment and we can therefore move simple and more fluid-designed elements around.
+If the user uses left hand ```templeft``` will be added to HTML's classes.
+Same goes with the right as: ```tempright```
 
 ##Usage
 Run `bower install uxhand.js` to grap the latest or simply download it from the build-folder.

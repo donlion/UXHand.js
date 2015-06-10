@@ -9,7 +9,8 @@ this.options = function() {
 		destroyClasses: true,
 		destroyData: true,
 		root: document.body,
-		threshold: 50
+		threshold: 50,
+		sessionThreshold: 10
 	};
 
 

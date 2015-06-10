@@ -20,12 +20,13 @@ var UXHand = new function() {
 	//= include modules/setupListeners.js
 	//= include modules/events.js
 	//= include modules/calc.js
+	//= include modules/session.js
 	//= include modules/domclasses.js
 	//= include modules/destroy.js
 	//= include modules/wireFrame.js
 
 
-	this.version = '0.2.6';
+	this.version = '0.3';
 
 	this.init = function() {
 		console.log("init");
@@ -50,6 +51,12 @@ var UXHand = new function() {
 	};
 
 
+	this._session = {
+		hand: null,
+		count: 0,
+		threshold: this.options().sessionThreshold
+	};
+
 	this._data = {
 		'scores': {
 			left: null,
@@ -57,6 +64,7 @@ var UXHand = new function() {
 			both: null
 		}
 	};
+
 
 	this._last = {
 		start: null,
