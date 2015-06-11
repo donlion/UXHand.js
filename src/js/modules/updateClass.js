@@ -1,9 +1,7 @@
 this.updateClass = function(value) {
 
-	console.error(value);
 
 	if (UXHand._data.current == value) {
-		console.error("CAUGHT");
 		return;
 	} else {
 		UXHand._data.current = value;
