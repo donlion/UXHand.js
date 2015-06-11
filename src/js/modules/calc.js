@@ -21,13 +21,15 @@ this._calc = function() {
 	// ];
 
 
-	var pushHand = function(hand) {
+	var pushHand = function(hand, session) {
 		if (hand == 'right') {
 			UXHand._data.scores.right++;
-			UXHand.session().add('right');
 		} else {
 			UXHand._data.scores.left++;
-			UXHand.session().add('left');
+		}
+
+		if (session) {
+			UXHand.session().add(hand);
 		}
 	};
 
@@ -193,10 +195,10 @@ this._calc = function() {
 	if (output.indexOf("vertical") > -1) {
 		if (vectors[0].x < area.w) {
 			console.log("Left hand");
-			pushHand('left');
+			pushHand('left', true);
 		} else if (vectors[0].x > area.w+area.x) {
 			console.log("Right hand");
-			pushHand('right');
+			pushHand('right', true);
 		}
 	} else {
 
@@ -256,10 +258,10 @@ this._calc = function() {
 
 		if (measurePath.left > measurePath.right) {
 			console.error("LEFT");
-			pushHand('left');
+			pushHand('left', true);
 		} else if (measurePath.right > measurePath.left) {
 			console.error("RIGHT");
-			pushHand('right');
+			pushHand('right', true);
 		}
 
 
