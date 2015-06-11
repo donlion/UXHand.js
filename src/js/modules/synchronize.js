@@ -10,7 +10,14 @@ this._synchronize = function(callback) {
 		&& this._data.scores.both == null
 		&& localData
 		) {
+		
+
+		if (localData.current) {
+			this.updateClass(localData.current);
+		}
+
 		this._data = localData;
+
 	} else {
 		localStorage.setItem("UXHandData", JSON.stringify(this._data));
 	}

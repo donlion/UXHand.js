@@ -30,6 +30,8 @@ this.session = function() {
 		newClass += ' temp'+self.hand;
 
 		html.className = newClass.trim();
+
+		UXHand.fireListeners('UXHand.temp'+self.hand);
 	};
 
 

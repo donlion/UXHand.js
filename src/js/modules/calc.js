@@ -178,14 +178,12 @@ this._calc = function() {
 
 
 
-
-
 	if (_last.moved) {
-		output.push("Move detected");
+		output.push("moveDetected");
 
 		drag(output);
 	} else {
-		output.push("Touch detected");
+		output.push("touch Detected");
 
 		tap(output);
 	}
@@ -195,10 +193,10 @@ this._calc = function() {
 	if (output.indexOf("vertical") > -1) {
 		if (vectors[0].x < area.w) {
 			console.log("Left hand");
-			pushHand('left');
+			pushHand('left', true);
 		} else if (vectors[0].x > area.w+area.x) {
 			console.log("Right hand");
-			pushHand('right');
+			pushHand('right', true);
 		}
 	} else {
 

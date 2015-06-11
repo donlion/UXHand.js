@@ -13,6 +13,7 @@ var UXHand = new function() {
 		return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
 	};
 
+
 	//= include modules/synchronize.js
 	//= include modules/compatibility.js
 	//= include modules/options.js
@@ -24,12 +25,16 @@ var UXHand = new function() {
 	//= include modules/domclasses.js
 	//= include modules/destroy.js
 	//= include modules/wireFrame.js
+	//= include modules/updateClass.js
+
+	//= include modules/listeners.js
 
 
-	this.version = '0.3';
+	this.version = '0.4';
 
 	this.init = function() {
 		console.log("init");
+
 
 		if (!this.compatibility()) {
 			console.info("Not compatible with localStorage");
@@ -62,7 +67,8 @@ var UXHand = new function() {
 			left: null,
 			right : null,
 			both: null
-		}
+		},
+		'current': null
 	};
 
 

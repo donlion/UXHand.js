@@ -12,26 +12,61 @@ var UXHand = new function() {
 	this.isIOS = function() {
 		return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
 	};
+
 	this._synchronize = function(callback) {
+
 		console.log("_synchronize");
+
 	
+
 	
+
 		var localData = JSON.parse(localStorage.getItem("UXHandData"));
+
 	
+
 		if (
+
 			this._data.scores.left == null
+
 			&& this._data.scores.right == null
+
 			&& this._data.scores.both == null
+
 			&& localData
+
 			) {
-			this._data = localData;
-		} else {
-			localStorage.setItem("UXHandData", JSON.stringify(this._data));
-		}
+
+			
+
 	
-		if (callback) {
-			callback();
+
+			if (localData.current) {
+
+				this.updateClass(localData.current);
+
+			}
+
+	
+
+			this._data = localData;
+
+	
+
+		} else {
+
+			localStorage.setItem("UXHandData", JSON.stringify(this._data));
+
 		}
+
+	
+
+		if (callback) {
+
+			callback();
+
+		}
+
 	};
 
 	this.compatibility = function() {
@@ -89,11 +124,12 @@ var UXHand = new function() {
 			this._calc();
 		} catch(e) {
 			console.log("No touches to calculate");
+			console.error(e);
 		} finally {
 			var _data = this._data;
 	
 			this._domClasses(_data);
-	
+			
 			this._synchronize();
 	
 	
@@ -135,7 +171,7 @@ var UXHand = new function() {
 	
 			}
 	
-	
+			this.fireEvent('cycle');
 	
 			this._last.move = false;
 			this._last.drag = [];
@@ -395,14 +431,12 @@ var UXHand = new function() {
 	
 	
 	
-	
-	
 		if (_last.moved) {
-			output.push("Move detected");
+			output.push("moveDetected");
 	
 			drag(output);
 		} else {
-			output.push("Touch detected");
+			output.push("touch Detected");
 	
 			tap(output);
 		}
@@ -412,10 +446,10 @@ var UXHand = new function() {
 		if (output.indexOf("vertical") > -1) {
 			if (vectors[0].x < area.w) {
 				console.log("Left hand");
-				pushHand('left');
+				pushHand('left', true);
 			} else if (vectors[0].x > area.w+area.x) {
 				console.log("Right hand");
-				pushHand('right');
+				pushHand('right', true);
 			}
 		} else {
 	
@@ -520,6 +554,8 @@ var UXHand = new function() {
 			newClass += ' temp'+self.hand;
 	
 			html.className = newClass.trim();
+	
+			UXHand.fireListeners('UXHand.temp'+self.hand);
 		};
 	
 	
@@ -539,43 +575,8 @@ var UXHand = new function() {
 
 	this._domClasses = function(_data) {
 	
-		var update = function(value) {
-	
-			var classes = value.split(','),
-					UXHandClasses = ['lefthand', 'righthand', 'bothhands'];
-	
-			var html = document.querySelector('html'),
-					htmlClass = html.className;
-	
-			var outputClasses = function() {
-	
-				UXHandClasses.forEach(function(className) {
-	
-					if (value.indexOf(className) >= 0) {
-	
-						if (htmlClass.indexOf(className) == -1) {
-							htmlClass += ' '+className;
-						} 
-	
-					} else {
-						htmlClass = htmlClass.replace(' '+className, '');
-					}
-	
-				});
-	
-				return htmlClass;
-			};
-	
-			html.className = outputClasses();
-		};
-	
-	
 	
 		var count = _data.scores.left+_data.scores.right+_data.scores.both;
-	
-		if (document.getElementById('textfield')) {
-			document.getElementById('textfield').innerHTML = count;
-		}
 	
 		if (!_data || count < this.options().threshold) {
 			return;
@@ -586,15 +587,15 @@ var UXHand = new function() {
 		console.log(_data.scores.left, _data.scores.right*(1+this.options().certainty));
 	
 		if (_data.scores.left > _data.scores.right*(1+this.options().certainty)) {
-			update('lefthand');
+			UXHand.updateClass('lefthand');
 		} else if (_data.scores.right > _data.scores.left*(1+this.options().certainty)) {
-			update('righthand');
+			UXHand.updateClass('righthand');
 		}
 	
 		var average = (_data.scores.right+_data.scores.left)/2;
 	
 		if (_data.scores.both > average) {
-			update('bothhands');
+			UXHand.updateClass('bothhands');
 		}
 	
 	};
@@ -602,6 +603,15 @@ var UXHand = new function() {
 	this.destroy = function() {
 	
 		localStorage.removeItem("UXHandData");
+	
+		UXHand._last = {
+			start: null,
+			end: null,
+			drag: [],
+			moved: false
+		};
+	
+		return true;
 	
 	};
 
@@ -633,12 +643,129 @@ var UXHand = new function() {
 	
 	};
 
+	this.updateClass = function(value) {
+	
+		console.error(value);
+	
+		if (UXHand._data.current == value) {
+			console.error("CAUGHT");
+			return;
+		} else {
+			UXHand._data.current = value;
+	
+			UXHand.fireListeners('UXHand.'+value);
+		}
+	
+		var classes = value.split(','),
+				UXHandClasses = ['lefthand', 'righthand', 'bothhands'];
+	
+		var html = document.querySelector('html'),
+				htmlClass = html.className;
+	
+		var outputClasses = function() {
+	
+			UXHandClasses.forEach(function(className) {
+	
+				if (value.indexOf(className) >= 0) {
+	
+					if (htmlClass.indexOf(className) == -1) {
+						htmlClass += ' '+className;
+					} 
+	
+				} else {
+					htmlClass = htmlClass.replace(' '+className, '');
+				}
+	
+			});
+	
+			return htmlClass;
+		};
+	
+	
+		html.className = outputClasses();
+	};
+
+	this.on = function(event, listenerFn) {
+		UXHand._listeners.push({
+			event: event.toLowerCase(),
+			callback: listenerFn
+		});
+	};
+	
+	this.off = function(event) {
+	
+		[].forEach.call(UXHand._listeners, function(listener, index) {
+			if (listener.event == event.toLowerCase()) {
+				UXHand._listeners.splice(listener, 1);
+			}
+		});
+	
+	};
+	
+	this.fireListeners = function(type) {
+	
+		this.fireEvent(type);
+	
+		if (UXHand._listeners.length > 0) {
+			[].forEach.call(UXHand._listeners, function(listener, index) {
+	
+				var listenerKeySplit = listener.event.split('.');
+				var listenerKey = listenerKeySplit.length > 2 ? listenerKeySplit.splice(0, listenerKeySplit.length-1).join(".") : listenerKeySplit.join(".");
+	
+	
+				if (listenerKey == type.toLowerCase()) {
+					try {
+						listener.callback();
+					} catch(e) {
+						console.log("Couldn't fire listener callback on "+listener.event);
+					}
+				}
+			});
+		}
+	
+	};
+	
+	this.fireEvent = function(type) {
+		
+		var e;
+	
+		var eventName = 'UXHand.'+type;
+	
+	
+		if (document.createEvent) {
+			e = document.createEvent('Event');
+			e.initEvent(eventName, true, false);
+		} else {
+			e = document.createEventObject();
+			e.eventType = eventName;
+		}
+	
+		e.eventName = eventName;
+	
+		if (document.createElement) {
+			document.dispatchEvent(e);
+		} else {
+			e.fireEvent('on'+eventName, e);
+		}
+	
+	
+	};
+	
+	
+	this._listeners = [];
+	
+	this.listeners = function() {
+		return this._listeners;
+	};
+	
 
 
-	this.version = '0.3';
+
+	this.version = '0.4';
 
 	this.init = function() {
 		console.log("init");
+
 
 		if (!this.compatibility()) {
 			console.info("Not compatible with localStorage");
@@ -671,7 +798,8 @@ var UXHand = new function() {
 			left: null,
 			right : null,
 			both: null
-		}
+		},
+		'current': null
 	};
 
 

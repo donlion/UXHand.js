@@ -220,6 +220,14 @@
 		<script type="text/javascript" src="build/uxhand.heatmap.js"></script>
 		<script>
 			UXHand.wireFrame.init();
+
+			document.addEventListener('UXHand.cycle', function() {
+				var textField = document.querySelector("#textfield");
+
+				var d = UXHand._data.scores;
+
+				textField.innerHTML = d.both + d.left + d.right;
+			});
 		</script>
 	</body>
 </html>
