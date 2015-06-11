@@ -245,7 +245,7 @@ var UXHand = new function() {
 				UXHand._data.scores.left++;
 			}
 	
-			if (session) {
+			if (session == true) {
 				UXHand.session().add(hand);
 			}
 		};
@@ -412,10 +412,10 @@ var UXHand = new function() {
 		if (output.indexOf("vertical") > -1) {
 			if (vectors[0].x < area.w) {
 				console.log("Left hand");
-				pushHand('left', true);
+				pushHand('left');
 			} else if (vectors[0].x > area.w+area.x) {
 				console.log("Right hand");
-				pushHand('right', true);
+				pushHand('right');
 			}
 		} else {
 	
