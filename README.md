@@ -32,6 +32,41 @@ When UXHand.js is included through a script-tag to your DOM, it'll run automatic
 ##Clearing
 `UXHand.destroy()` will clear all recorded data saved to localStorage
 
+##Event listeners
+
+###Built-in
+If you are used to using jQuery event-namespaces, the built-in event listeners will suit you quite well.
+Setting a listener:
+```javascript
+UXHand.on('UXHand.lefthand', function() {
+	alert('My cool callback');
+});
+```
+Removing a listener:
+```javascript
+UXHand.off('UXHand.righthand');
+```
+Setting namespaced listener:
+```javascript
+UXHand.on('UXHand.lefthand.nameSpace', callback);
+```
+Removing a namespaced listener:
+```javascript
+UXHand.off('UXHand.lefthand.nameSpace');
+```
+Output all current listeners:
+```javascript
+UXHand.listeners()
+```
+
+
+###Good ol' listeners
+If you want to use the good old event-listeners, use following syntax:
+```javascript
+document.addEventListener('UXHand.templeft', function() {
+	/* Custom tracking-actions */
+});
+
 #Demo
 Visit [donlion.github.io/UXHand.js](http://donlion.github.io/UXHand.js) from a touch-device and start scrolling. The threshold is lowered to 10 for test purpose only.
 
