@@ -66,6 +66,7 @@ If you want to use the good old event-listeners, use following syntax:
 document.addEventListener('UXHand.templeft', function() {
 	/* Custom tracking-actions */
 });
+```
 
 #Demo
 Visit [donlion.github.io/UXHand.js](http://donlion.github.io/UXHand.js) from a touch-device and start scrolling. The threshold is lowered to 10 for test purpose only.
