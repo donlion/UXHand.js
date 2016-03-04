@@ -12,7 +12,11 @@ this._synchronize = function(callback) {
 		) {
 		this._data = localData;
 	} else {
-		localStorage.setItem("UXHandData", JSON.stringify(this._data));
+		try {
+			localStorage.setItem("UXHandData", JSON.stringify(this._data));
+		} catch(e) {
+			console.error(e);
+		}
 	}
 
 	if (callback) {

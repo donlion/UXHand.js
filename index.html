@@ -221,6 +221,30 @@
 		<script type="text/javascript" src="build/uxhand.heatmap.js"></script>
 		<script>
 			UXHand.wireFrame.init();
+
+			window.container = document.getElementById("textfield");
+
+		// if (window.DeviceOrientationEvent) {
+		//   window.addEventListener('deviceorientation', function(e) {
+		//   	var a,
+		// 			b,
+		// 			g,
+		// 			el = document.getElementsByTagName("button")[0];
+
+		// 	  a = Math.floor(e.alpha);
+		// 		b = Math.floor(e.beta);
+		// 		g = Math.floor(e.gamma);
+		// 		el.style.transform = 'rotateZ('+a+'deg) rotateX('+b+'deg) rotateY('+g+'deg)';
+  //    }, true);
+		// }
+
+		if (window.DeviceMotionEvent) {
+			window.addEventListener('deviceorientation', function(e) {
+				// container.innerHTML = Math.floor(e.rotationRate.alpha)+", "+Math.floor(e.rotationRate.beta)+", "+Math.floor(e.rotationRate.gamma);
+				//container.innerHTML = Math.floor(e.webkitCompassHeading ? e.webkitCompassHeading : e.alpha);
+			});
+		}
+		
 		</script>
 	</body>
 </html>
