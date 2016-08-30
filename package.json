@@ -1,0 +1,29 @@
+{
+  "name": "uxhand.js",
+  "version": "2.0.0",
+  "description": "Left/Right hand detection service",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "webpack --progress --colors",
+    "watch": "webpack --progress --watch --display-error-details",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/donlion/UXHand.js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/donlion/UXHand.js/issues"
+  },
+  "homepage": "https://github.com/donlion/UXHand.js#readme",
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "path": "^0.12.7",
+    "webpack": "^1.13.2"
+  }
+}
